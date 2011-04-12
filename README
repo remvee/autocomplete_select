@@ -1,0 +1,40 @@
+AutocompleteSelect
+==================
+
+Replacement for select form helper using prototypejs autocomplete to
+select an associated object in a form.
+
+
+Example
+=======
+
+Here's a very simple example where a book belongs to an author:
+
+In app/views/layouts/application.html.erb:
+
+  <%= javascript_include_tag :defaults %>
+  <%= autocomplete_select_includes %>
+
+In app/views/books/_form.html.erb:
+
+  <%= book_form.autocomplete_select :author_id %>
+
+In app/models/author.rb:
+
+  named_scope :search, lambda{|q| {:conditions => ["name LIKE ?", "%#{q}%"]}}
+  alias_method :to_s, :name
+
+In app/controllers/authors_controller.rb:
+
+  def index
+    @authors = Author.search params[:search]
+  end
+
+In app/views/authors/index.autocomplete.erb
+
+  <%= autocomplete_list @authors %>
+
+Don't forget to run: +rake autocomplete_select:install_assets+
+
+
+Copyright (c) 2011 Remco van 't Veer, released under the MIT license
