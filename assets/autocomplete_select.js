@@ -88,7 +88,7 @@ document.observe('dom:loaded', function() {
   });
 })
 
-// activate autocomplete select fields
-document.observe('dom:loaded', function() {
-  AutocompleteSelect.activate();
-});
+// activate autocomplete select fields on load and on ajax complete
+document.observe('dom:loaded', AutocompleteSelect.activate);
+Ajax.Responders.register({onComplete: AutocompleteSelect.activate});
+
