@@ -32,7 +32,8 @@ module AutocompleteSelectHelper
   #
   # The resource url is constructed from the association name with
   # +polymorphic_path+.  Extra options can be passed with the
-  # +url_options+ option.
+  # +url_options+ option.  The entire url can be overridden by passing
+  # a +resource_url+ option.
   # 
   # The visible value is normally obtained by calling +to_s+ on the
   # currently selected instance.  Use the +val_fn+ option to pass an
@@ -47,9 +48,10 @@ module AutocompleteSelectHelper
     errors = options[:object].errors
     disabled = options.delete(:disabled)
     val_fn = options.delete(:val_fn) || lambda{|val| h(val.to_s)}
-    resource_url = polymorphic_path(association.to_s.pluralize,
-                                    {:format => :autocomplete}.
-                                    merge(options.delete(:url_options) || {}))
+    resource_url = options.delete(:resource_url) ||
+      polymorphic_path(association.to_s.pluralize,
+                       {:format => :autocomplete}.
+                       merge(options.delete(:url_options) || {}))
     input_options,
     extras_options,
     anchor_options = if value = options[:object].send(attribute)
