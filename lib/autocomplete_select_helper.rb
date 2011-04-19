@@ -46,7 +46,7 @@ module AutocompleteSelectHelper
     attribute = method.to_s.gsub(/_id$/, '')
     association = options.delete(:association) || attribute
     errors = options[:object].errors
-    disabled = options.delete(:disabled)
+    disabled = options[:disabled]
     val_fn = options.delete(:val_fn) || lambda{|val| h(val.to_s)}
     resource_url = options.delete(:resource_url) ||
       polymorphic_path(association.to_s.pluralize,
@@ -69,6 +69,7 @@ module AutocompleteSelectHelper
     
     container_class_names = ["autocomplete-select"]
     container_class_names << "fieldWithErrors" if errors.on(attribute) || errors.on(method)
+    container_class_names << "disabled" if disabled
     
     insert = capture(&block) if block_given?
 

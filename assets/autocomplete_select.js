@@ -69,7 +69,7 @@ var AutocompleteSelect = Class.create({
 
 AutocompleteSelect.activate = function() {
   $$('.autocomplete-select input[type=hidden]').each(function(e) {
-    if (!e.autocomplete_select) {
+    if (!e.disabled && !e.autocomplete_select) {
       e.autocomplete_select = new AutocompleteSelect(e);
     }
   });
