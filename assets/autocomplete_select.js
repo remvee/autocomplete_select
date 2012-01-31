@@ -32,6 +32,7 @@ var AutocompleteSelect = Class.create({
     }).merge(options).toObject());
 
     this.selection.observe('click', this.clear.bind(this));
+    this.search.observe('blur', this.reset.bind(this));
     if ($(input).hasClassName('autocomplete-selection')) this.clear();
 
     if (this.field.id) AutocompleteSelectors[this.field.id] = this;
@@ -39,15 +40,24 @@ var AutocompleteSelect = Class.create({
 
   set: function(value, display) {
     this.field.value = value;
+
     this.search.hide();
     if (this.search_extras) this.search_extras.hide();
+
     this.selection.innerHTML = display;
     this.selection.show();
+
+    this.previous_value = null;
+    this.previous_display = null;
+
     this.field.fire('hidden:change');
   },
 
   clear: function(event) {
     if (event) Event.stop(event);
+
+    this.previous_value = this.field.value;
+    this.previous_display = this.selection.innerHTML;
 
     this.field.value = '';
     this.selection.hide();
@@ -59,6 +69,12 @@ var AutocompleteSelect = Class.create({
       this.search.focus();
     } catch(e) {
       /* ignore exception thrown by IE when element is invisible */
+    }
+  },
+
+  reset: function() {
+    if (this.previous_value && this.previous_display) {
+      this.set(this.previous_value, this.previous_display);
     }
   },
 
@@ -88,7 +104,7 @@ document.observe('dom:loaded', function() {
   });
 })
 
-// activate autocomplete select fields on load and on ajax complete
-document.observe('dom:loaded', AutocompleteSelect.activate);
-Ajax.Responders.register({onComplete: AutocompleteSelect.activate});
-
+// activate autocomplete select fields
+document.observe('dom:loaded', function() {
+  AutocompleteSelect.activate();
+});
