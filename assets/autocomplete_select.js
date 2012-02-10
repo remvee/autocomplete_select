@@ -87,22 +87,17 @@ AutocompleteSelect.activate = function() {
   $$('.autocomplete-select input[type=hidden]').each(function(e) {
     if (!e.disabled && !e.autocomplete_select) {
       e.autocomplete_select = new AutocompleteSelect(e);
+
+      var onchange = e.getAttribute('onchange');
+      if (onchange) {
+        if (typeof(onchange) != 'function') {
+          eval("onchange = (function(event){(function(){" + onchange + "}).bind(Event.element(event))()});");
+        }
+        e.observe('hidden:change', onchange);
+      }
     }
   });
 }
-
-// make sure you call field.fire('hidden:change') when a hidden field changes
-document.observe('dom:loaded', function() {
-  $$('.autocomplete-select input[type=hidden]').each(function(e) {
-    var onchange = e.getAttribute('onchange')
-    if (onchange) {
-      if (typeof(onchange) != 'function') {
-        eval("onchange = (function(event){(function(){" + onchange + "}).bind(Event.element(event))()});");
-      }
-      e.observe('hidden:change', onchange);
-    }
-  });
-})
 
 // activate autocomplete select fields
 document.observe('dom:loaded', function() {
