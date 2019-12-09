@@ -7,7 +7,15 @@ var SelectAutocompleter = Class.create(Ajax.Autocompleter, {
     } else {
       this.element.removeClassName("not-found");
     }
-  }
+  },
+  show: function($super) {
+    $super();
+    $(this.element).up('form').addClassName('select-autocomplete-active');
+  },
+  hide: function($super) {
+    $super();
+    $(this.element).up('form').removeClassName('select-autocomplete-active');
+  },
 });
 
 var AutocompleteSelectors = {}
