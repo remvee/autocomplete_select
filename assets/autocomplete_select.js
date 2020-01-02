@@ -10,11 +10,15 @@ var SelectAutocompleter = Class.create(Ajax.Autocompleter, {
   },
   show: function($super) {
     $super();
-    $(this.element).up('form').addClassName('select-autocomplete-active');
+
+    var e = $(this.element).up('form');
+    if (e) e.addClassName('select-autocomplete-active');
   },
   hide: function($super) {
+    var e = $(this.element).up('form');
+    if (e) e.removeClassName('select-autocomplete-active');
+
     $super();
-    $(this.element).up('form').removeClassName('select-autocomplete-active');
   },
 });
 
